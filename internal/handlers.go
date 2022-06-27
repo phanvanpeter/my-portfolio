@@ -7,11 +7,12 @@ import (
 )
 
 var TmplFolder = "./templates/"
+const tmplExtenstion = ".gohtml"
 
 // Home renders a Home page
 func Home(w http.ResponseWriter, r *http.Request) {
-	file := "home.page.gohtml"
-	tmpl, err := template.ParseFiles(TmplFolder + file)
+	file := "home.page"
+	tmpl, err := template.ParseFiles(TmplFolder + file + tmplExtenstion)
 	if err != nil {
 		log.Fatalf("Error parsing a file %s; %s", file, err)
 	}
@@ -29,3 +30,5 @@ func About(w http.ResponseWriter, r *http.Request) {
 		log.Fatal(err)
 	}
 }
+
+

@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/alexedwards/scs/v2"
 	"github.com/phanvanpeter/my-portfolio/config"
+	"github.com/phanvanpeter/my-portfolio/internal/handlers"
 	"log"
 	"net/http"
 	"time"
@@ -28,6 +29,8 @@ func run() error {
 	appConfig = &config.AppConfig{
 		Session: session,
 	}
+
+	handlers.InitHandlers(appConfig)
 
 	router := Route()
 

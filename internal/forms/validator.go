@@ -33,7 +33,7 @@ func (f *Form) Required(fields ...string) {
 
 func (f *Form) MinLength(field string, length int) bool {
 	s := f.Get(field)
-	if len(s) <= length {
+	if len(s) < length {
 		f.Errors.Add(field, fmt.Sprintf("Minimum length must be at least %d characters.", length))
 		return false
 	}

@@ -7,7 +7,6 @@ import (
 	"github.com/phanvanpeter/my-portfolio/config"
 	"github.com/phanvanpeter/my-portfolio/internal/handlers"
 	"github.com/phanvanpeter/my-portfolio/models"
-	"github.com/phanvanpeter/my-portfolio/repository/filerepo"
 	"github.com/phanvanpeter/my-portfolio/repository/postgres"
 	"log"
 	"net/http"
@@ -36,11 +35,11 @@ func run() error {
 		Session: session,
 	}
 
-	_ = postgres.NewConnection()
+	db := postgres.NewConnection()
+	defer db.Close()
+	dbRepo := postgres.NewRepo(db)
 
-	db := filerepo.NewFileRepo()
-
-	handlers.InitHandlers(appConfig, db)
+	handlers.InitHandlers(appConfig, dbRepo)
 
 	router := Route()
 

@@ -8,12 +8,14 @@ import (
 	_ "github.com/jackc/pgx/v4/stdlib"
 )
 
+// NewConnection creates a connection to Postgres database.
+// Do not forget to call 'db.Close()' in the scope of the function in which it is executed
 func NewConnection() *sql.DB {
 	db, err := sql.Open("pgx", "host=localhost port=5432 dbname=tasks user=postgres password=Ahojako0")
 	if err != nil {
 		log.Fatalf("Unable to connect to PostgreSQL database: %s", err)
 	}
-	defer db.Close()
+	//defer db.Close()
 
 	testConn(db)
 	return db

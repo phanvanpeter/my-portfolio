@@ -55,6 +55,7 @@ func (f *fileRepo) GetTasks() ([]models.Task, error) {
 	return tasks, nil
 }
 
+// AddTask adds a new task
 func (f *fileRepo) AddTask(task string) error {
 	file, err := openFile(writeFlag)
 	if err != nil {
@@ -70,6 +71,7 @@ func (f *fileRepo) AddTask(task string) error {
 	return nil
 }
 
+// DeleteTask deletes a task with the given id
 func (f *fileRepo) DeleteTask(id int) error {
 	tasks, err := f.GetTasks()
 	if err != nil {

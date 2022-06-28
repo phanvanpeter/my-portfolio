@@ -1,18 +1,18 @@
 package handlers
 
 import (
-	"github.com/phanvanpeter/my-portfolio/config"
+	config2 "github.com/phanvanpeter/my-portfolio/internal/config"
 	"github.com/phanvanpeter/my-portfolio/internal/render"
 	"github.com/phanvanpeter/my-portfolio/internal/repository"
 	"net/http"
 )
 
 var (
-	app *config.AppConfig
+	app *config2.AppConfig
 	db  repository.DBRepository
 )
 
-func InitHandlers(a *config.AppConfig, dbRepo repository.DBRepository) {
+func InitHandlers(a *config2.AppConfig, dbRepo repository.DBRepository) {
 	app = a
 	db = dbRepo
 }
@@ -29,7 +29,7 @@ func Home(w http.ResponseWriter, r *http.Request) {
 
 	app.Session.Put(r.Context(), "author", author)
 
-	render.Template(w, r, file, &config.TemplateData{
+	render.Template(w, r, file, &config2.TemplateData{
 		StringMap: strMap,
 	})
 }
@@ -44,7 +44,7 @@ func About(w http.ResponseWriter, r *http.Request) {
 		"author": author,
 	}
 
-	render.Template(w, r, file, &config.TemplateData{
+	render.Template(w, r, file, &config2.TemplateData{
 		StringMap: strMap,
 	})
 	app.Session.Remove(r.Context(), "author")

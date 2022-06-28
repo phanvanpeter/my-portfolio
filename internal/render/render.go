@@ -2,7 +2,7 @@ package render
 
 import (
 	"github.com/justinas/nosurf"
-	"github.com/phanvanpeter/my-portfolio/config"
+	"github.com/phanvanpeter/my-portfolio/internal/config"
 	"html/template"
 	"log"
 	"net/http"

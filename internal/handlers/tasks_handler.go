@@ -3,7 +3,7 @@ package handlers
 import (
 	"context"
 	"github.com/go-chi/chi/v5"
-	"github.com/phanvanpeter/my-portfolio/config"
+	"github.com/phanvanpeter/my-portfolio/internal/config"
 	"github.com/phanvanpeter/my-portfolio/internal/render"
 	"log"
 	"net/http"

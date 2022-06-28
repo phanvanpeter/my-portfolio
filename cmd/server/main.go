@@ -4,7 +4,7 @@ import (
 	"encoding/gob"
 	"fmt"
 	"github.com/alexedwards/scs/v2"
-	"github.com/phanvanpeter/my-portfolio/config"
+	"github.com/phanvanpeter/my-portfolio/internal/config"
 	"github.com/phanvanpeter/my-portfolio/internal/handlers"
 	"github.com/phanvanpeter/my-portfolio/internal/models"
 	postgres2 "github.com/phanvanpeter/my-portfolio/internal/repository/postgres"

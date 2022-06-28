@@ -114,7 +114,26 @@ func (p *postgresRepo) CompleteTask(id int, completed bool) error {
 	_, err := p.DB.ExecContext(ctx, query, completed, id)
 
 	if err != nil {
-		return errors.New(fmt.Sprintf("Error updating the task with id %d: %s", id, err))
+		return errors.New(fmt.Sprintf("Error updating the task (column done) with id %d: %s", id, err))
+	}
+
+	return nil
+}
+
+// EditTask updates the task with the given ID
+func (p *postgresRepo) EditTask(id int, task string) error {
+	ctx, cancel := context.WithTimeout(context.Background(), 3 * time.Second)
+	defer cancel()
+
+	query := `
+		update tasks
+		set task = $1
+		where id = $2`
+
+	_, err := p.DB.ExecContext(ctx, query, task, id)
+
+	if err != nil {
+		return errors.New(fmt.Sprintf("Error updating the task (column task) with id %d: %s", id, err))
 	}
 
 	return nil

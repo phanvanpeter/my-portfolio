@@ -9,6 +9,7 @@ type DBRepository interface {
 	GetTasks(done TaskDone) ([]models.Task, error)
 	AddTask(task string) error
 	CompleteTask(id int, completed bool) error
+	EditTask(id int, task string) error
 	DeleteTask(id int) error
 }
 

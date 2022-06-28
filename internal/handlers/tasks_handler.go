@@ -123,6 +123,28 @@ func CompleteTask(w http.ResponseWriter, r *http.Request) {
 	http.Redirect(w, r, "/tasks", http.StatusSeeOther)
 }
 
+// EditTask edits the task (only it's text, not any other attribute).
+func EditTask(w http.ResponseWriter, r *http.Request) {
+	err := r.ParseForm()
+	if err != nil {
+		log.Fatalf("Error parsing a form: %s", err)
+	}
+
+	taskID, err := strconv.Atoi(chi.URLParam(r, "id"))
+	if err != nil {
+		log.Fatalf("Invalid task ID, expected number, got %s", chi.URLParam(r, "id"))
+	}
+
+	task := r.PostForm.Get("task")
+
+	err = db.EditTask(taskID, task)
+	if err != nil {
+		log.Fatalf("Error editing the task %d: %s", taskID, err)
+	}
+
+	http.Redirect(w, r, "/tasks", http.StatusSeeOther)
+}
+
 // DeleteTask deletes task from the file
 func DeleteTask(w http.ResponseWriter, r *http.Request) {
 	err := r.ParseForm()

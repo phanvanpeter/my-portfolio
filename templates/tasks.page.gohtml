@@ -52,7 +52,13 @@
             {{ range $tasks }}
                 <tr>
                     <td>{{.ID}}</td>
-                    <td>{{.Task}}</td>
+                    <td>
+                        <form action="/tasks/{{.ID}}/edit" method="post">
+                            <input type="hidden" name="csrf_token" value="{{$.CSRFToken}}">
+                            <input type="text" name="task" value="{{.Task}}">
+                            <input type="submit" value="Edit">
+                        </form>
+                    </td>
                     <td>
                         <form action="/tasks/{{.ID}}/complete" method="post">
                             <input type="hidden" name="csrf_token" value="{{$.CSRFToken}}">
@@ -96,12 +102,17 @@
         {{ range $finished }}
             <tr>
                 <td>{{.ID}}</td>
-                <td>{{.Task}}</td>
+                <td>
+                    <form action="/tasks/{{.ID}}/edit" method="post">
+                        <input type="hidden" name="csrf_token" value="{{$.CSRFToken}}">
+                        <input type="text" name="task" value="{{.Task}}">
+                        <input type="submit" value="Edit">
+                    </form>
+                </td>
                 <td>
                     <form action="/tasks/{{.ID}}/complete" method="post">
                         <input type="hidden" name="csrf_token" value="{{$.CSRFToken}}">
                         <input type="hidden" name="completed" value="false">
-
                         <input type="submit" value="Not Completed">
                     </form>
                 </td>

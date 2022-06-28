@@ -12,6 +12,7 @@ func Route() http.Handler {
 	r := chi.NewRouter()
 
 	r.Use(middleware.Recoverer)
+	r.Use(SessionLoad)
 
 	r.Get("/", handlers.Home)
 	r.Get("/about", handlers.About)

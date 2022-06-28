@@ -1,4 +1,4 @@
-package models
+package config
 
 type TemplateData struct {
 	Data      map[string]interface{}

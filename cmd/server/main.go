@@ -7,6 +7,7 @@ import (
 	"github.com/phanvanpeter/my-portfolio/config"
 	"github.com/phanvanpeter/my-portfolio/internal/handlers"
 	"github.com/phanvanpeter/my-portfolio/models"
+	"github.com/phanvanpeter/my-portfolio/repository/filerepo"
 	"log"
 	"net/http"
 	"time"
@@ -34,7 +35,9 @@ func run() error {
 		Session: session,
 	}
 
-	handlers.InitHandlers(appConfig)
+	db := filerepo.FileRepo{}
+
+	handlers.InitHandlers(appConfig, &db)
 
 	router := Route()
 

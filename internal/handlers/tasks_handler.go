@@ -3,9 +3,8 @@ package handlers
 import (
 	"context"
 	"fmt"
+	"github.com/phanvanpeter/my-portfolio/config"
 	"github.com/phanvanpeter/my-portfolio/internal/render"
-	"github.com/phanvanpeter/my-portfolio/models"
-	"github.com/phanvanpeter/my-portfolio/repository/filerepo"
 	"log"
 	"net/http"
 )
@@ -17,7 +16,7 @@ func Tasks(w http.ResponseWriter, r *http.Request) {
 	strMap := taskGetSessions(r.Context())
 	data := taskGetData()
 
-	render.Template(w, r, file, &models.TemplateData{
+	render.Template(w, r, file, &config.TemplateData{
 		StringMap: strMap,
 		Data: data,
 	})
@@ -39,7 +38,7 @@ func taskGetSessions(c context.Context) map[string]string {
 
 // taskGetData loads the tasks from the file and returns them in the map
 func taskGetData() map[string]interface{} {
-	tasks, err := filerepo.GetTasks()
+	tasks, err := db.GetTasks()
 	if err != nil {
 		log.Fatal("Error loading tasks:", err)
 	}

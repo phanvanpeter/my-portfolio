@@ -8,8 +8,11 @@ import (
 
 const fileName = "./repository/filerepo/tasks.txt"
 
+type FileRepo struct {
+}
+
 // GetTasks loads all the tasks saved in the file
-func GetTasks() ([]models.Task, error) {
+func (f *FileRepo) GetTasks() ([]models.Task, error) {
 	var tasks []models.Task
 
 	file, err := os.Open(fileName)

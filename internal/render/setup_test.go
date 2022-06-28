@@ -1,4 +1,4 @@
-package handlers
+package render
 
 import (
 	"os"
@@ -6,10 +6,9 @@ import (
 )
 
 func TestMain(m *testing.M) {
-	TmplFolder = "../templates/"
+	TmplFolder = "../../templates/"
 
 	os.Exit(m.Run())
 }
-
 
 // go test -coverprofile=coverage.out && go tool cover -html=coverage.out

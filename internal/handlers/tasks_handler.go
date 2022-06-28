@@ -8,6 +8,7 @@ import (
 	"net/http"
 )
 
+// Tasks renders a task HTML page
 func Tasks(w http.ResponseWriter, r *http.Request) {
 	file := "tasks.page"
 
@@ -26,6 +27,7 @@ func Tasks(w http.ResponseWriter, r *http.Request) {
 	app.Session.Remove(r.Context(), "task")
 }
 
+// PostTasks adds a new task the to list of tasks
 func PostTasks(w http.ResponseWriter, r *http.Request) {
 	err := r.ParseForm()
 	if err != nil {

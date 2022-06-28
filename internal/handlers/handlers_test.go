@@ -29,7 +29,7 @@ func TestAbout(t *testing.T) {
 	r := httptest.NewRequest(http.MethodGet, "/about", nil)
 	w := httptest.NewRecorder()
 
-	Home(w, r)
+	About(w, r)
 	res := w.Result()
 	defer res.Body.Close()
 

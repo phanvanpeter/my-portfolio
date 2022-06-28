@@ -1,10 +1,12 @@
 package main
 
 import (
+	"encoding/gob"
 	"fmt"
 	"github.com/alexedwards/scs/v2"
 	"github.com/phanvanpeter/my-portfolio/config"
 	"github.com/phanvanpeter/my-portfolio/internal/handlers"
+	"github.com/phanvanpeter/my-portfolio/models"
 	"log"
 	"net/http"
 	"time"
@@ -24,6 +26,8 @@ func main() {
 
 // run starts the server and runs the web application
 func run() error {
+	gobRegister()
+
 	session = initSession()
 
 	appConfig = &config.AppConfig{
@@ -51,5 +55,8 @@ func initSession() *scs.SessionManager {
 	session.Cookie.Secure = true
 
 	return session
+}
 
+func gobRegister() {
+	gob.Register(models.Task{})
 }

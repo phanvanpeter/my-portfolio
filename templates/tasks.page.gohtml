@@ -27,6 +27,33 @@
     {{ else }}
         <p>No tasks to be processed</p>
     {{ end }}
+
+    <hr>
+
+    <h3>Tasks</h3>
+    {{ $tasks := index .Data "tasks" }}
+
+    {{ with $tasks }}
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Task</th>
+                </tr>
+            </thead>
+            <tbody>
+                {{ range $tasks }}
+                    <tr>
+                        <td>{{.ID}}</td>
+                        <td>{{.Task}}</td>
+                    </tr>
+                {{ end }}
+            </tbody>
+        </table>
+    {{ else }}
+        <p>No tasks.</p>
+    {{ end }}
+
 </form>
 </body>
 </html>

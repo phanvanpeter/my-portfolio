@@ -8,6 +8,7 @@ import (
 	"github.com/phanvanpeter/my-portfolio/internal/handlers"
 	"github.com/phanvanpeter/my-portfolio/models"
 	"github.com/phanvanpeter/my-portfolio/repository/filerepo"
+	"github.com/phanvanpeter/my-portfolio/repository/postgres"
 	"log"
 	"net/http"
 	"time"
@@ -34,6 +35,8 @@ func run() error {
 	appConfig = &config.AppConfig{
 		Session: session,
 	}
+
+	_ = postgres.NewConnection()
 
 	db := filerepo.NewFileRepo()
 

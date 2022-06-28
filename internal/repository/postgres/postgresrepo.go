@@ -6,6 +6,7 @@ import (
 	"errors"
 	"fmt"
 	"github.com/phanvanpeter/my-portfolio/internal/models"
+	"github.com/phanvanpeter/my-portfolio/internal/repository"
 	"time"
 )
 
@@ -21,16 +22,34 @@ type postgresRepo struct {
 
 
 // GetTasks loads all the tasks saved in the database
-func (p *postgresRepo) GetTasks() ([]models.Task, error) {
+func (p *postgresRepo) GetTasks(done repository.TaskDone) ([]models.Task, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 3 * time.Second)
 	defer cancel()
 
 	var tasks []models.Task
+	var query string
 
-	query := `
-		select id, task, done, created_at, updated_at
-		from tasks
-		order by updated_at`
+	switch done {
+	case repository.All:
+		query = `
+			select id, task, done, created_at, updated_at
+			from tasks
+			order by updated_at`
+	case repository.Done:
+		query = `
+			select id, task, done, created_at, updated_at
+			from tasks
+			where done = true
+			order by updated_at`
+	case repository.NotDone:
+		query = `
+			select id, task, done, created_at, updated_at
+			from tasks
+			where done = false
+			order by updated_at`
+	default:
+		return tasks, errors.New("invalid TaskDone")
+	}
 
 	rows, err := p.DB.QueryContext(ctx, query)
 	if err != nil {
@@ -77,6 +96,25 @@ func (p *postgresRepo) AddTask(task string) error {
 
 	if err != nil {
 		return errors.New(fmt.Sprintf("Error inserting the task: %s", err))
+	}
+
+	return nil
+}
+
+// CompleteTask marks the given task as done
+func (p *postgresRepo) CompleteTask(id int, completed bool) error {
+	ctx, cancel := context.WithTimeout(context.Background(), 3 * time.Second)
+	defer cancel()
+
+	query := `
+		update tasks
+		set done = $1
+		where id = $2`
+
+	_, err := p.DB.ExecContext(ctx, query, completed, id)
+
+	if err != nil {
+		return errors.New(fmt.Sprintf("Error updating the task with id %d: %s", id, err))
 	}
 
 	return nil

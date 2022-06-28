@@ -6,6 +6,7 @@ import (
 	"github.com/phanvanpeter/my-portfolio/internal/config"
 	"github.com/phanvanpeter/my-portfolio/internal/forms"
 	"github.com/phanvanpeter/my-portfolio/internal/render"
+	"github.com/phanvanpeter/my-portfolio/internal/repository"
 	"log"
 	"net/http"
 	"strconv"
@@ -47,13 +48,19 @@ func taskGetSessions(c context.Context) (map[string]string, forms.FormErrors) {
 
 // taskGetData loads the tasks from the file and returns them in the map
 func taskGetData() map[string]interface{} {
-	tasks, err := db.GetTasks()
+	tasks, err := db.GetTasks(repository.NotDone)
+	if err != nil {
+		log.Fatal("Error loading tasks:", err)
+	}
+
+	completedTasks, err := db.GetTasks(repository.Done)
 	if err != nil {
 		log.Fatal("Error loading tasks:", err)
 	}
 
 	data := make(map[string]interface{})
 	data["tasks"] = tasks
+	data["completedTasks"] = completedTasks
 	return data
 }
 
@@ -91,6 +98,31 @@ func PostTask(w http.ResponseWriter, r *http.Request) {
 	http.Redirect(w, r, "/tasks", http.StatusSeeOther)
 }
 
+// CompleteTask marks the task as done
+func CompleteTask(w http.ResponseWriter, r *http.Request) {
+	err := r.ParseForm()
+	if err != nil {
+		log.Fatalf("Error parsing a form: %s", err)
+	}
+
+	taskID, err := strconv.Atoi(chi.URLParam(r, "id"))
+	if err != nil {
+		log.Fatalf("Invalid task ID, expected number, got %s", chi.URLParam(r, "id"))
+	}
+
+	completed, err := strconv.ParseBool(r.PostForm.Get("completed"))
+	if err != nil {
+		log.Fatalf("Invalid 'completed', expected bool, got %s", r.PostForm.Get("completed"))
+	}
+
+	err = db.CompleteTask(taskID, completed)
+	if err != nil {
+		log.Fatalf("Error completing the task %d: %s", taskID, err)
+	}
+
+	http.Redirect(w, r, "/tasks", http.StatusSeeOther)
+}
+
 // DeleteTask deletes task from the file
 func DeleteTask(w http.ResponseWriter, r *http.Request) {
 	err := r.ParseForm()
@@ -105,7 +137,7 @@ func DeleteTask(w http.ResponseWriter, r *http.Request) {
 
 	err = db.DeleteTask(taskID)
 	if err != nil {
-		log.Fatalf("Error deleting a task: %s", err)
+		log.Fatalf("Error deleting the task %d: %s", taskID, err)
 	}
 
 	http.Redirect(w, r, "/tasks", http.StatusSeeOther)

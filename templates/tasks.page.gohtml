@@ -35,7 +35,7 @@
 
 <hr>
 
-<h3>Tasks</h3>
+<h3>Tasks To Do</h3>
 {{ $tasks := index .Data "tasks" }}
 
 {{ with $tasks }}
@@ -45,6 +45,7 @@
                 <th>ID</th>
                 <th>Task</th>
                 <th></th>
+                <th></th>
             </tr>
         </thead>
         <tbody>
@@ -53,17 +54,70 @@
                     <td>{{.ID}}</td>
                     <td>{{.Task}}</td>
                     <td>
+                        <form action="/tasks/{{.ID}}/complete" method="post">
+                            <input type="hidden" name="csrf_token" value="{{$.CSRFToken}}">
+                            <input type="hidden" name="completed" value="true">
+
+                            <input type="submit" value="Completed">
+                        </form>
+                    </td>
+                    <td>
                         <form action="/tasks/{{.ID}}/delete" method="post">
                             <input type="hidden" name="csrf_token" value="{{$.CSRFToken}}">
 
-                            <input type="submit" value="Done">
-                        </form></td>
+                            <input type="submit" value="Delete">
+                        </form>
+                    </td>
                 </tr>
             {{ end }}
         </tbody>
     </table>
 {{ else }}
     <p>No tasks.</p>
+{{ end }}
+
+
+<hr>
+
+<h3>Completed Tasks</h3>
+{{ $finished := index .Data "completedTasks" }}
+
+{{ with $finished }}
+    <table>
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Task</th>
+            <th></th>
+            <th></th>
+        </tr>
+        </thead>
+        <tbody>
+        {{ range $finished }}
+            <tr>
+                <td>{{.ID}}</td>
+                <td>{{.Task}}</td>
+                <td>
+                    <form action="/tasks/{{.ID}}/complete" method="post">
+                        <input type="hidden" name="csrf_token" value="{{$.CSRFToken}}">
+                        <input type="hidden" name="completed" value="false">
+
+                        <input type="submit" value="Not Completed">
+                    </form>
+                </td>
+                <td>
+                    <form action="/tasks/{{.ID}}/delete" method="post">
+                        <input type="hidden" name="csrf_token" value="{{$.CSRFToken}}">
+
+                        <input type="submit" value="Delete">
+                    </form>
+                </td>
+            </tr>
+        {{ end }}
+        </tbody>
+    </table>
+{{ else }}
+    <p>No completed tasks.</p>
 {{ end }}
 
 </body>

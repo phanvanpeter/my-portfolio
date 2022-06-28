@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"context"
 	"fmt"
 	"github.com/phanvanpeter/my-portfolio/internal/render"
 	"github.com/phanvanpeter/my-portfolio/models"
@@ -13,21 +14,8 @@ import (
 func Tasks(w http.ResponseWriter, r *http.Request) {
 	file := "tasks.page"
 
-	strMap := map[string]string{}
-
-	if app.Session.Exists(r.Context(), "task") {
-		task := app.Session.Get(r.Context(), "task").(string)
-		msg := fmt.Sprintf("Your task has been processed: %s", task)
-		strMap["newTask"] = msg
-	}
-
-	tasks, err := filerepo.GetTasks()
-	if err != nil {
-		log.Fatal("Error loading tasks:", err)
-	}
-
-	data := make(map[string]interface{})
-	data["tasks"] = tasks
+	strMap := taskGetSessions(r.Context())
+	data := taskGetData()
 
 	render.Template(w, r, file, &models.TemplateData{
 		StringMap: strMap,
@@ -35,6 +23,28 @@ func Tasks(w http.ResponseWriter, r *http.Request) {
 	})
 
 	app.Session.Remove(r.Context(), "task")
+}
+
+func taskGetSessions(c context.Context) map[string]string {
+	strMap := map[string]string{}
+
+	if app.Session.Exists(c, "task") {
+		task := app.Session.Get(c, "task").(string)
+		msg := fmt.Sprintf("Your task has been processed: %s", task)
+		strMap["newTask"] = msg
+	}
+	return strMap
+}
+
+func taskGetData() map[string]interface{} {
+	tasks, err := filerepo.GetTasks()
+	if err != nil {
+		log.Fatal("Error loading tasks:", err)
+	}
+
+	data := make(map[string]interface{})
+	data["tasks"] = tasks
+	return data
 }
 
 // PostTasks adds a new task the to list of tasks

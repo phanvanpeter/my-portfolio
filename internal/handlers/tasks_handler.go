@@ -80,6 +80,8 @@ func PostTask(w http.ResponseWriter, r *http.Request) {
 
 	http.Redirect(w, r, "/tasks", http.StatusSeeOther)
 }
+
+// DeleteTask deletes task from the file
 func DeleteTask(w http.ResponseWriter, r *http.Request) {
 	err := r.ParseForm()
 	if err != nil {

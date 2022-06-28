@@ -35,9 +35,9 @@ func run() error {
 		Session: session,
 	}
 
-	db := filerepo.FileRepo{}
+	db := filerepo.NewFileRepo()
 
-	handlers.InitHandlers(appConfig, &db)
+	handlers.InitHandlers(appConfig, db)
 
 	router := Route()
 

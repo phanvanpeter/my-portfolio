@@ -8,9 +8,13 @@ import (
 	"strings"
 )
 
+func NewFileRepo() *fileRepo {
+	return &fileRepo{}
+}
+
 const fileName = "./repository/filerepo/tasks.txt"
 
-type FileRepo struct {
+type fileRepo struct {
 }
 
 const readFlag = os.O_APPEND|os.O_CREATE|os.O_RDONLY
@@ -22,7 +26,7 @@ func openFile(flag int) (*os.File, error) {
 }
 
 // GetTasks loads all the tasks saved in the file
-func (f *FileRepo) GetTasks() ([]models.Task, error) {
+func (f *fileRepo) GetTasks() ([]models.Task, error) {
 	var tasks []models.Task
 
 	file, err := openFile(readFlag)
@@ -51,7 +55,7 @@ func (f *FileRepo) GetTasks() ([]models.Task, error) {
 	return tasks, nil
 }
 
-func (f *FileRepo) AddTask(task string) error {
+func (f *fileRepo) AddTask(task string) error {
 	file, err := openFile(writeFlag)
 	if err != nil {
 		return err
@@ -66,7 +70,7 @@ func (f *FileRepo) AddTask(task string) error {
 	return nil
 }
 
-func (f *FileRepo) DeleteTask(id int) error {
+func (f *fileRepo) DeleteTask(id int) error {
 	tasks, err := f.GetTasks()
 	if err != nil {
 		return err

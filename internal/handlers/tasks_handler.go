@@ -2,7 +2,6 @@ package handlers
 
 import (
 	"context"
-	"fmt"
 	"github.com/phanvanpeter/my-portfolio/config"
 	"github.com/phanvanpeter/my-portfolio/internal/render"
 	"log"
@@ -22,16 +21,21 @@ func Tasks(w http.ResponseWriter, r *http.Request) {
 	})
 
 	app.Session.Remove(r.Context(), "task")
+	app.Session.Remove(r.Context(), "bad_task")
 }
 
 // taskGetSessions gets sessions, particularly "task" session and put them in the map of strings
 func taskGetSessions(c context.Context) map[string]string {
 	strMap := map[string]string{}
 
+	if app.Session.Exists(c, "bad_task") {
+		task := app.Session.Get(c, "bad_task").(string)
+		strMap["badTask"] = task
+	}
+
 	if app.Session.Exists(c, "task") {
 		task := app.Session.Get(c, "task").(string)
-		msg := fmt.Sprintf("Your task has been processed: %s", task)
-		strMap["newTask"] = msg
+		strMap["task"] = task
 	}
 	return strMap
 }
@@ -57,6 +61,14 @@ func PostTasks(w http.ResponseWriter, r *http.Request) {
 
 	values := r.PostForm
 	task := values.Get("task")
+
+	if task == "bad task" {
+		http.Error(w, "Task cannot be 'bad task'", http.StatusSeeOther)
+		app.Session.Put(r.Context(), "bad_task", task)
+		http.Redirect(w, r, "/tasks", http.StatusSeeOther)
+		return
+	}
+
 	app.Session.Put(r.Context(), "task", task)
 
 	http.Redirect(w, r, "/tasks", http.StatusSeeOther)

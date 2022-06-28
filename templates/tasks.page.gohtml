@@ -18,14 +18,16 @@
 <form action="/tasks" method="post">
     <input type="hidden" name="csrf_token" value="{{ .CSRFToken }}">
 
-    <input type="text" name="task">
+    <input type="text" name="task" value="{{ index .StringMap "badTask" }}" required>
 
     <input type="submit" value="Add Task">
 
-    {{ with (index .StringMap "newTask") }}
-        <p>{{ . }}</p>
-    {{ else }}
-        <p>No tasks to be processed</p>
+    {{ with (index .StringMap "task") }}
+        <p>Your task has been processed: {{ . }}</p>
+    {{ end }}
+
+    {{ with (index .StringMap "badTask") }}
+        <p>Task cannot be '{{ . }}'</p>
     {{ end }}
 
     <hr>

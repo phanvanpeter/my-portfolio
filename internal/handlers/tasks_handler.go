@@ -4,6 +4,7 @@ import (
 	"context"
 	"github.com/go-chi/chi/v5"
 	"github.com/phanvanpeter/my-portfolio/internal/config"
+	"github.com/phanvanpeter/my-portfolio/internal/forms"
 	"github.com/phanvanpeter/my-portfolio/internal/render"
 	"log"
 	"net/http"
@@ -14,32 +15,34 @@ import (
 func Tasks(w http.ResponseWriter, r *http.Request) {
 	file := "tasks.page"
 
-	strMap := taskGetSessions(r.Context())
+	strMap, formErrors := taskGetSessions(r.Context())
 	data := taskGetData()
 
 	render.Template(w, r, file, &config.TemplateData{
 		StringMap: strMap,
+		FormErrors: formErrors,
 		Data: data,
 	})
 
+	app.Session.Remove(r.Context(), "newTask")
 	app.Session.Remove(r.Context(), "task")
-	app.Session.Remove(r.Context(), "bad_task")
+	app.Session.Remove(r.Context(), "formErrors")
 }
 
 // taskGetSessions gets sessions, particularly "task" session and put them in the map of strings
-func taskGetSessions(c context.Context) map[string]string {
+func taskGetSessions(c context.Context) (map[string]string, forms.FormErrors) {
 	strMap := map[string]string{}
+	errMap := forms.FormErrors{}
 
-	if app.Session.Exists(c, "bad_task") {
-		task := app.Session.Get(c, "bad_task").(string)
-		strMap["badTask"] = task
+	if app.Session.Exists(c, "formErrors") {
+		errMap = app.Session.Get(c, "formErrors").(forms.FormErrors)
 	}
 
 	if app.Session.Exists(c, "task") {
 		task := app.Session.Get(c, "task").(string)
 		strMap["task"] = task
 	}
-	return strMap
+	return strMap, errMap
 }
 
 // taskGetData loads the tasks from the file and returns them in the map
@@ -61,15 +64,22 @@ func PostTask(w http.ResponseWriter, r *http.Request) {
 		log.Fatal("The task could not be processed:", err)
 	}
 
-	values := r.PostForm
-	task := values.Get("task")
+	form := forms.New(r.PostForm)
+	form.MinLength("task", 3)
+	form.Required("task")
 
-	if task == "bad task" {
-		http.Error(w, "Task cannot be 'bad task'", http.StatusSeeOther)
-		app.Session.Put(r.Context(), "bad_task", task)
+	task := r.Form.Get("task")
+
+	if !form.IsValid() {
+		formErrors := form.Errors.GetAll()
+
+		app.Session.Put(r.Context(), "task", task)
+		app.Session.Put(r.Context(), "formErrors", formErrors)
 		http.Redirect(w, r, "/tasks", http.StatusSeeOther)
 		return
 	}
+
+	app.Session.Put(r.Context(), "newTask", task)
 
 	err = db.AddTask(task)
 	if err != nil {

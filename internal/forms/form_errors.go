@@ -1,15 +1,15 @@
 package forms
 
-type formErrors map[string][]string
+type FormErrors map[string]string
 
-func (f formErrors) Get(field string) string {
-	e := f[field]
-	if len(e) == 0 {
-		return ""
-	}
-	return e[0]
+func (f FormErrors) GetAll() FormErrors {
+	return f
 }
 
-func (f formErrors) Add(field, msg string) {
-	f[field] = append(f[field], msg)
+func (f FormErrors) Get(field string) string {
+	return f[field]
+}
+
+func (f FormErrors) Add(field, msg string) {
+	f[field] = msg
 }

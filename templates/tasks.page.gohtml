@@ -18,18 +18,19 @@
 <form action="/tasks" method="post">
     <input type="hidden" name="csrf_token" value="{{ .CSRFToken }}">
 
-    <input type="text" name="task" value="{{ index .StringMap "badTask" }}" required>
+    <div>
+        <input type="text" name="task" value="{{ index .StringMap "task" }}" required>
+        {{ with index .FormErrors "task" }}
+            <p><strong>{{ . }}</strong></p>
+        {{ end }}
+    </div>
 
     <input type="submit" value="Add Task">
 </form>
 
 
-{{ with (index .StringMap "task") }}
+{{ with (index .StringMap "newTask") }}
     <p>Your task has been added: {{ . }}</p>
-{{ end }}
-
-{{ with (index .StringMap "badTask") }}
-    <p>Task cannot be '{{ . }}'</p>
 {{ end }}
 
 <hr>

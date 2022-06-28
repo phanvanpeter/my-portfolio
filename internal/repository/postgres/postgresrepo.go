@@ -5,7 +5,7 @@ import (
 	"database/sql"
 	"errors"
 	"fmt"
-	"github.com/phanvanpeter/my-portfolio/models"
+	"github.com/phanvanpeter/my-portfolio/internal/models"
 	"time"
 )
 

@@ -1,4 +1,4 @@
 .idea
 portfolio
 coverage.out
-./repository/filerepo/file_tasks.go
+internal/repository/filerepo/file_tasks.go

@@ -2,7 +2,7 @@ package filerepo
 
 import (
 	"bufio"
-	"github.com/phanvanpeter/my-portfolio/models"
+	"github.com/phanvanpeter/my-portfolio/internal/models"
 	"log"
 	"os"
 	"strings"

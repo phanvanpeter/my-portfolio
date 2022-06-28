@@ -6,8 +6,8 @@ import (
 	"github.com/alexedwards/scs/v2"
 	"github.com/phanvanpeter/my-portfolio/config"
 	"github.com/phanvanpeter/my-portfolio/internal/handlers"
-	"github.com/phanvanpeter/my-portfolio/models"
-	"github.com/phanvanpeter/my-portfolio/repository/postgres"
+	"github.com/phanvanpeter/my-portfolio/internal/models"
+	postgres2 "github.com/phanvanpeter/my-portfolio/internal/repository/postgres"
 	"log"
 	"net/http"
 	"time"
@@ -35,9 +35,9 @@ func run() error {
 		Session: session,
 	}
 
-	db := postgres.NewConnection()
+	db := postgres2.NewConnection()
 	defer db.Close()
-	dbRepo := postgres.NewRepo(db)
+	dbRepo := postgres2.NewRepo(db)
 
 	handlers.InitHandlers(appConfig, dbRepo)
 

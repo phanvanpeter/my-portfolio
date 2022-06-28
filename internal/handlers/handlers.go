@@ -3,7 +3,7 @@ package handlers
 import (
 	"github.com/phanvanpeter/my-portfolio/config"
 	"github.com/phanvanpeter/my-portfolio/internal/render"
-	"github.com/phanvanpeter/my-portfolio/repository"
+	"github.com/phanvanpeter/my-portfolio/internal/repository"
 	"net/http"
 )
 

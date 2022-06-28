@@ -42,9 +42,3 @@ func TestAbout(t *testing.T) {
 		t.Errorf("Expected status code %d, got %d", http.StatusOK, res.StatusCode)
 	}
 }
-
-func TestRenderTemplate(t *testing.T) {
-	w := httptest.NewRecorder()
-	RenderTemplate(w, "home.page")
-	RenderTemplate(w, "about.page")
-}

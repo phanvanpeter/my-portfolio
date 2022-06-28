@@ -25,7 +25,7 @@ func Home(w http.ResponseWriter, r *http.Request) {
 
 	app.Session.Put(r.Context(), "author", author)
 
-	render.Template(w, file, &models.TemplateData{
+	render.Template(w, r, file, &models.TemplateData{
 		StringMap: strMap,
 	})
 }
@@ -40,7 +40,7 @@ func About(w http.ResponseWriter, r *http.Request) {
 		"author": author,
 	}
 
-	render.Template(w, file, &models.TemplateData{
+	render.Template(w, r, file, &models.TemplateData{
 		StringMap: strMap,
 	})
 	app.Session.Remove(r.Context(), "author")

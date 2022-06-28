@@ -16,9 +16,10 @@ func Route() http.Handler {
 	r.Use(SessionLoad)
 
 	r.Get("/", handlers.Home)
-	r.Get("/", handlers.Tasks)
-
 	r.Get("/about", handlers.About)
+
+	r.Get("/tasks", handlers.Tasks)
+	r.Post("/tasks", handlers.PostTasks)
 
 	return r
 }

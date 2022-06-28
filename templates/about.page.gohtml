@@ -12,10 +12,17 @@
     <nav>
         <ul><a href="/">Home</a></ul>
         <ul><a href="/about">About</a></ul>
+        <ul><a href="/tasks">Tasks</a></ul>
     </nav>
 
     <h2>About page</h2>
 
     <p>This is about page!</p>
+
+    {{ with (index .StringMap "author") }}
+        <p>Author of the Home page: {{ . }}</p>
+    {{ else }}
+        <p>Go to <a href="/">Home</a> and then return to get the author of this page.</p>
+    {{ end }}
 </body>
 </html>

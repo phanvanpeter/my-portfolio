@@ -39,6 +39,7 @@ func run() error {
 	return nil
 }
 
+// initSession initializes and returns a session manager for the web application
 func initSession() *scs.SessionManager {
 	session := scs.New()
 	session.Lifetime = 24 * time.Hour

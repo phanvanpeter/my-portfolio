@@ -19,7 +19,8 @@ func Route() http.Handler {
 	r.Get("/about", handlers.About)
 
 	r.Get("/tasks", handlers.Tasks)
-	r.Post("/tasks", handlers.PostTasks)
+	r.Post("/tasks", handlers.PostTask)
+	r.Post("/tasks/{id}/delete", handlers.DeleteTask)
 
 	return r
 }

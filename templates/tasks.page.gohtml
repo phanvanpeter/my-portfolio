@@ -21,41 +21,49 @@
     <input type="text" name="task" value="{{ index .StringMap "badTask" }}" required>
 
     <input type="submit" value="Add Task">
-
-    {{ with (index .StringMap "task") }}
-        <p>Your task has been processed: {{ . }}</p>
-    {{ end }}
-
-    {{ with (index .StringMap "badTask") }}
-        <p>Task cannot be '{{ . }}'</p>
-    {{ end }}
-
-    <hr>
-
-    <h3>Tasks</h3>
-    {{ $tasks := index .Data "tasks" }}
-
-    {{ with $tasks }}
-        <table>
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Task</th>
-                </tr>
-            </thead>
-            <tbody>
-                {{ range $tasks }}
-                    <tr>
-                        <td>{{.ID}}</td>
-                        <td>{{.Task}}</td>
-                    </tr>
-                {{ end }}
-            </tbody>
-        </table>
-    {{ else }}
-        <p>No tasks.</p>
-    {{ end }}
-
 </form>
+
+
+{{ with (index .StringMap "task") }}
+    <p>Your task has been added: {{ . }}</p>
+{{ end }}
+
+{{ with (index .StringMap "badTask") }}
+    <p>Task cannot be '{{ . }}'</p>
+{{ end }}
+
+<hr>
+
+<h3>Tasks</h3>
+{{ $tasks := index .Data "tasks" }}
+
+{{ with $tasks }}
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Task</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            {{ range $tasks }}
+                <tr>
+                    <td>{{.ID}}</td>
+                    <td>{{.Task}}</td>
+                    <td>
+                        <form action="/tasks/{{.ID}}/delete" method="post">
+                            <input type="hidden" name="csrf_token" value="{{$.CSRFToken}}">
+
+                            <input type="submit" value="Done">
+                        </form></td>
+                </tr>
+            {{ end }}
+        </tbody>
+    </table>
+{{ else }}
+    <p>No tasks.</p>
+{{ end }}
+
 </body>
 </html>

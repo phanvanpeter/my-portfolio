@@ -2,10 +2,12 @@ package handlers
 
 import (
 	"context"
+	"github.com/go-chi/chi/v5"
 	"github.com/phanvanpeter/my-portfolio/config"
 	"github.com/phanvanpeter/my-portfolio/internal/render"
 	"log"
 	"net/http"
+	"strconv"
 )
 
 // Tasks renders a task HTML page
@@ -52,8 +54,8 @@ func taskGetData() map[string]interface{} {
 	return data
 }
 
-// PostTasks adds a new task the to list of tasks
-func PostTasks(w http.ResponseWriter, r *http.Request) {
+// PostTask adds a new task the to list of tasks
+func PostTask(w http.ResponseWriter, r *http.Request) {
 	err := r.ParseForm()
 	if err != nil {
 		log.Fatal("The task could not be processed:", err)
@@ -69,7 +71,30 @@ func PostTasks(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	err = db.AddTask(task)
+	if err != nil {
+		log.Fatalf("Error storing the task: %s", err)
+	}
+
 	app.Session.Put(r.Context(), "task", task)
+
+	http.Redirect(w, r, "/tasks", http.StatusSeeOther)
+}
+func DeleteTask(w http.ResponseWriter, r *http.Request) {
+	err := r.ParseForm()
+	if err != nil {
+		log.Fatalf("Error parsing a form: %s", err)
+	}
+
+	taskID, err := strconv.Atoi(chi.URLParam(r, "id"))
+	if err != nil {
+		log.Fatalf("Invalid task ID, expected number, got %s", chi.URLParam(r, "id"))
+	}
+
+	err = db.DeleteTask(taskID)
+	if err != nil {
+		log.Fatalf("Error deleting a task: %s", err)
+	}
 
 	http.Redirect(w, r, "/tasks", http.StatusSeeOther)
 }

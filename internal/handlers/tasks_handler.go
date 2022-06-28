@@ -25,6 +25,7 @@ func Tasks(w http.ResponseWriter, r *http.Request) {
 	app.Session.Remove(r.Context(), "task")
 }
 
+// taskGetSessions gets sessions, particularly "task" session and put them in the map of strings
 func taskGetSessions(c context.Context) map[string]string {
 	strMap := map[string]string{}
 
@@ -36,6 +37,7 @@ func taskGetSessions(c context.Context) map[string]string {
 	return strMap
 }
 
+// taskGetData loads the tasks from the file and returns them in the map
 func taskGetData() map[string]interface{} {
 	tasks, err := filerepo.GetTasks()
 	if err != nil {
